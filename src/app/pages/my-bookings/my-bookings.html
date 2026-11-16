@@ -1,0 +1,62 @@
+<main class="my-bookings-page">
+  <header class="bookings-header">
+    <div>
+      <p class="bookings-eyebrow">Your trips</p>
+      <h1>My Bookings</h1>
+    </div>
+    <span class="booking-count">{{ bookings().length }} bookings</span>
+  </header>
+
+  @if (loading()) {
+    <p class="bookings-message" role="status">Loading your bookings…</p>
+  } @else if (errorMessage()) {
+    <p class="bookings-message bookings-error" role="alert">{{ errorMessage() }}</p>
+  } @else if (bookings().length === 0) {
+    <p class="bookings-message">You have no bookings yet. Search for a bus to plan your next trip.</p>
+  } @else {
+    <section class="booking-list" aria-label="Your bus bookings">
+      @for (booking of bookings(); track booking.bookingId) {
+        <article class="booking-card">
+          <div class="booking-card-header">
+            <div>
+              <h2 class="booked-bus-name">{{ booking.busName }}</h2>
+              <p class="booked-bus-type">{{ booking.busNumber }} · {{ booking.busType }}</p>
+            </div>
+            <span class="booking-id">Booking #{{ booking.bookingId }}</span>
+          </div>
+
+          <div class="booked-route">
+            <div class="route-point">
+              <strong>{{ booking.departureTime.slice(0, 5) }}</strong>
+              <span>{{ booking.fromLocation }}</span>
+            </div>
+            <span class="route-arrow" aria-hidden="true">→</span>
+            <div class="route-point">
+              <strong>{{ booking.arrivalTime.slice(0, 5) }}</strong>
+              <span>{{ booking.toLocation }}</span>
+            </div>
+          </div>
+
+          <div class="booking-meta">
+            <div>
+              <span>Travel date</span>
+              <strong>{{ booking.travelDate }}</strong>
+            </div>
+            <div>
+              <span>Seats</span>
+              <strong>{{ booking.passengers.length }} · {{ seatNumbers(booking) }}</strong>
+            </div>
+            <div>
+              <span>Passengers</span>
+              <strong>{{ passengerNames(booking) }}</strong>
+            </div>
+            <div>
+              <span>Total paid</span>
+              <strong>₹{{ booking.totalAmount | number: '1.0-0' }}</strong>
+            </div>
+          </div>
+        </article>
+      }
+    </section>
+  }
+</main>

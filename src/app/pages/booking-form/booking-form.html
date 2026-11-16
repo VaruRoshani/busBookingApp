@@ -1,0 +1,163 @@
+<main class="booking-page">
+  <div class="booking-page-header">
+    <p class="booking-eyebrow">Complete your trip</p>
+    <h1>Choose your seats</h1>
+  </div>
+
+  @if (loading()) {
+    <p class="booking-message" role="status">Loading bus and seat availability…</p>
+  }
+  @if (errorMessage()) {
+    <p class="booking-message booking-error" role="alert">{{ errorMessage() }}</p>
+  }
+  @if (successMessage()) {
+    <p class="booking-message booking-success" role="status">{{ successMessage() }}</p>
+  }
+
+  @if (bus(); as currentBus) {
+    <form class="booking-layout" (ngSubmit)="bookNow()">
+      <section class="seat-panel" aria-labelledby="seat-heading">
+        <div class="panel-heading">
+          <div>
+            <h2 class="panel-title" id="seat-heading">Select your seat</h2>
+            <p class="panel-subtitle">{{ currentBus.busName }} · {{ currentBus.busNumber }}</p>
+          </div>
+          <span class="seat-capacity">{{ currentBus.totalSeats }} seats</span>
+        </div>
+
+        <div class="bus-front">
+          <span>Front of the bus</span>
+          <svg class="steering-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="12" cy="12" r="9" />
+            <circle cx="12" cy="12" r="2.5" />
+            <path d="M4.2 7.5 9.8 11m10-3.5L14.2 11M12 14.5V21" />
+          </svg>
+        </div>
+
+        <div class="seat-grid" aria-label="Select seats">
+          @for (seat of seats; track seat) {
+            <button
+              class="seat-button"
+              type="button"
+              [class.booked]="isBooked(seat)"
+              [class.selected]="isSelected(seat)"
+              [style.gridColumn]="seatColumn(seat)"
+              [disabled]="isBooked(seat) || loading()"
+              [attr.aria-pressed]="isSelected(seat)"
+              [attr.aria-label]="'Seat ' + seat + (isBooked(seat) ? ', booked' : isSelected(seat) ? ', selected' : ', available')"
+              (click)="toggleSeat(seat)"
+            >
+              {{ seat }}
+            </button>
+          }
+        </div>
+
+        <div class="seat-legend" aria-label="Seat legend">
+          <span><i class="legend-seat legend-available"></i>Available</span>
+          <span><i class="legend-seat legend-selected"></i>Selected</span>
+          <span><i class="legend-seat legend-booked"></i>Booked</span>
+        </div>
+      </section>
+
+      <div class="booking-details">
+        <section class="passenger-panel" aria-labelledby="passenger-heading">
+          <div class="panel-heading">
+            <div>
+              <h2 class="panel-title" id="passenger-heading">Passenger details</h2>
+              <p class="panel-subtitle">Add details for each selected seat.</p>
+            </div>
+            <span class="selected-count">{{ selectedSeats().length }} selected</span>
+          </div>
+
+          @if (selectedSeats().length === 0) {
+            <p class="empty-passengers">Select one or more seats to enter passenger details.</p>
+          } @else {
+            <div class="passenger-list">
+              @for (seat of selectedSeats(); track seat) {
+                <fieldset class="passenger-card">
+                  <legend class="passenger-legend">Passenger for seat {{ seat }}</legend>
+                  <div class="passenger-fields">
+                    <label class="passenger-field passenger-name-field">
+                      <span>Name</span>
+                      <input
+                        type="text"
+                        [name]="'passenger-name-' + seat"
+                        [(ngModel)]="passengers[seat].name"
+                        placeholder="Passenger name"
+                        maxlength="100"
+                        required
+                      />
+                    </label>
+                    <label class="passenger-field passenger-age-field">
+                      <span>Age</span>
+                      <input
+                        type="number"
+                        [name]="'passenger-age-' + seat"
+                        [(ngModel)]="passengers[seat].age"
+                        min="1"
+                        max="120"
+                        placeholder="Age"
+                        required
+                      />
+                    </label>
+                    <label class="passenger-field passenger-gender-field">
+                      <span>Gender</span>
+                      <select
+                        [name]="'passenger-gender-' + seat"
+                        [(ngModel)]="passengers[seat].gender"
+                        required
+                      >
+                        <option value="" disabled>Select</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                      </select>
+                    </label>
+                  </div>
+                </fieldset>
+              }
+            </div>
+          }
+        </section>
+
+        <section class="journey-panel" aria-labelledby="journey-heading">
+          <h2 class="panel-title" id="journey-heading">Journey details</h2>
+          <h3 class="journey-bus-name">{{ currentBus.busName }}</h3>
+          <p class="journey-bus-number">{{ currentBus.busNumber }} · {{ currentBus.busType }}</p>
+
+          <div class="journey-facts">
+            <div class="journey-fact">
+              <span>Departure</span>
+              <strong>{{ currentBus.fromLocation }} · {{ formatTime(currentBus.departureTime) }}</strong>
+            </div>
+            <div class="journey-fact">
+              <span>Arrival</span>
+              <strong>{{ currentBus.toLocation }} · {{ formatTime(currentBus.arrivalTime) }}</strong>
+            </div>
+            <div class="journey-fact">
+              <span>Travel date</span>
+              <strong>{{ formatDate(travelDate) }}</strong>
+            </div>
+            <div class="journey-fact">
+              <span>Price per seat</span>
+              <strong>₹{{ currentBus.pricePerSeat | number: '1.0-0' }}</strong>
+            </div>
+          </div>
+
+          <div class="journey-total">
+            <span>Total amount</span>
+            <strong>₹{{ totalAmount() | number: '1.0-0' }}</strong>
+          </div>
+
+          <button
+            class="book-now-button"
+            type="submit"
+            [disabled]="selectedSeats().length === 0 || submitting()"
+          >
+            {{ submitting() ? 'Booking…' : 'Book Now' }}
+          </button>
+        </section>
+      </div>
+    </form>
+  }
+</main>

@@ -1,0 +1,165 @@
+<main class="auth-page">
+  <section class="auth-card" aria-labelledby="auth-heading">
+    <div class="brand-mark" aria-hidden="true">
+      <svg class="brand-icon" viewBox="0 0 32 32">
+        <path d="M5 8.5A3.5 3.5 0 0 1 8.5 5h15A3.5 3.5 0 0 1 27 8.5V22h-2.5a3.5 3.5 0 0 1-7 0h-3a3.5 3.5 0 0 1-7 0H5V8.5Z" />
+        <path d="M7 11h18M8 16h4m8 0h4M8 22a1.5 1.5 0 1 0 3 0m7 0a1.5 1.5 0 1 0 3 0" />
+      </svg>
+      <span class="brand-name">redBus</span>
+    </div>
+
+    <h1 class="auth-heading" id="auth-heading">Welcome to redBus</h1>
+    <p class="auth-subheading">Sign in or create an account to manage your journeys.</p>
+
+    <div class="auth-tabs" role="tablist" aria-label="Choose an account action">
+      <button
+        class="auth-tab"
+        [class.is-active]="mode() === 'login'"
+        id="login-tab"
+        type="button"
+        role="tab"
+        [attr.aria-selected]="mode() === 'login'"
+        aria-controls="login-panel"
+        (click)="setMode('login')"
+      >
+        Login
+      </button>
+      <button
+        class="auth-tab"
+        [class.is-active]="mode() === 'register'"
+        id="register-tab"
+        type="button"
+        role="tab"
+        [attr.aria-selected]="mode() === 'register'"
+        aria-controls="register-panel"
+        (click)="setMode('register')"
+      >
+        Register
+      </button>
+    </div>
+
+    @if (errorMessage()) {
+      <p class="auth-status auth-error" role="alert">{{ errorMessage() }}</p>
+    }
+    @if (successMessage()) {
+      <p class="auth-status auth-success" role="status">{{ successMessage() }}</p>
+    }
+
+    @if (mode() === 'login') {
+      <form class="auth-form" id="login-panel" role="tabpanel" aria-labelledby="login-tab" (ngSubmit)="submitLogin()">
+        <div class="form-field">
+          <label class="field-label" for="login-username">Username</label>
+          <input
+            class="field-input"
+            id="login-username"
+            name="userName"
+            type="text"
+            placeholder="Enter your username"
+            autocomplete="username"
+            [(ngModel)]="loginForm.userName"
+            required
+          />
+        </div>
+
+        <div class="form-field">
+          <label class="field-label" for="login-password">Password</label>
+          <input
+            class="field-input"
+            id="login-password"
+            name="password"
+            type="password"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            [(ngModel)]="loginForm.password"
+            required
+          />
+        </div>
+
+        <button class="submit-button" type="submit" [disabled]="loading()">
+          {{ loading() ? 'Signing in…' : 'Login' }}
+        </button>
+      </form>
+    } @else {
+      <form class="auth-form" id="register-panel" role="tabpanel" aria-labelledby="register-tab" novalidate (ngSubmit)="submitRegister()">
+        <div class="form-field">
+          <label class="field-label" for="register-full-name">Full name</label>
+          <input
+            class="field-input"
+            id="register-full-name"
+            name="fullName"
+            type="text"
+            placeholder="Enter your full name"
+            autocomplete="name"
+            [(ngModel)]="registerForm.fullName"
+            (ngModelChange)="validateField('fullName')"
+            [class.is-invalid]="fieldErrors()['fullName']"
+            required
+          />
+          @if (fieldErrors()['fullName']) { <small class="field-error">{{ fieldErrors()['fullName'] }}</small> }
+        </div>
+
+        <div class="form-field">
+          <label class="field-label" for="register-username">Username</label>
+          <input
+            class="field-input"
+            id="register-username"
+            name="userName"
+            type="text"
+            placeholder="Choose a username"
+            autocomplete="username"
+            [(ngModel)]="registerForm.userName"
+            minlength="4"
+            maxlength="32"
+            (ngModelChange)="validateField('userName')"
+            [class.is-invalid]="fieldErrors()['userName']"
+            required
+          />
+          @if (fieldErrors()['userName']) { <small class="field-error">{{ fieldErrors()['userName'] }}</small> }
+        </div>
+
+        <div class="form-field">
+          <label class="field-label" for="register-email">Email address</label>
+          <input
+            class="field-input"
+            id="register-email"
+            name="emailId"
+            type="email"
+            placeholder="you@example.com"
+            autocomplete="email"
+            [(ngModel)]="registerForm.emailId"
+            (ngModelChange)="validateField('emailId')"
+            [class.is-invalid]="fieldErrors()['emailId']"
+            required
+          />
+          @if (fieldErrors()['emailId']) { <small class="field-error">{{ fieldErrors()['emailId'] }}</small> }
+        </div>
+
+        <div class="form-field">
+          <label class="field-label" for="register-password">Password</label>
+          <input
+            class="field-input"
+            id="register-password"
+            name="password"
+            type="password"
+            placeholder="Create a password"
+            autocomplete="new-password"
+            [(ngModel)]="registerForm.password"
+            (ngModelChange)="validateField('password')"
+            [class.is-invalid]="fieldErrors()['password']"
+            minlength="8"
+            maxlength="72"
+            required
+          />
+          <small class="password-hint">Minimum 8 characters with uppercase, lowercase, number and special character</small>
+          @if (fieldErrors()['password']) { <small class="field-error">{{ fieldErrors()['password'] }}</small> }
+        </div>
+
+        <button class="submit-button" type="submit" [disabled]="loading()">
+          {{ loading() ? 'Creating account…' : 'Create account' }}
+        </button>
+      </form>
+    }
+
+    <p class="auth-footnote">Your account makes every journey easier.</p>
+  </section>
+</main>

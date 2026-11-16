@@ -1,0 +1,148 @@
+<main class="home-page">
+  <section class="hero" aria-labelledby="hero-heading">
+    <div class="page-container hero-content">
+      <div class="hero-copy">
+        <p class="hero-eyebrow">Travel made simple</p>
+        <h1 class="hero-heading" id="hero-heading">
+          India's No. 1 online bus ticket booking site
+        </h1>
+      </div>
+      <span class="hero-badge">Your journey starts here</span>
+    </div>
+  </section>
+
+  <div class="page-container search-container">
+    <form class="search-panel" aria-label="Search bus tickets" (ngSubmit)="searchBuses()">
+      <div class="search-fields">
+        <div class="field city-field">
+          <label class="field-label" for="origin">From</label>
+          <div class="input-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 6.5h16a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5H4A1.5 1.5 0 0 1 2.5 17V8A1.5 1.5 0 0 1 4 6.5Z" />
+              <path d="M3 11h18M6 15.5h2m8 0h2" />
+            </svg>
+            <input id="origin" name="origin" type="text" [(ngModel)]="from" (ngModelChange)="showFromSuggestions.set(true)" (focus)="showFromSuggestions.set(true)" autocomplete="off" required />
+          </div>
+          @if (showFromSuggestions()) {
+            <div class="city-suggestions" role="listbox">
+              @for (city of citySuggestions(from); track city) { <button type="button" role="option" (click)="selectCity('from', city)">{{ city }}</button> }
+            </div>
+          }
+        </div>
+
+        <div class="field city-field">
+          <label class="field-label" for="destination">To</label>
+          <div class="input-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 6.5h16a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5H4A1.5 1.5 0 0 1 2.5 17V8A1.5 1.5 0 0 1 4 6.5Z" />
+              <path d="M3 11h18M6 15.5h2m8 0h2" />
+            </svg>
+            <input id="destination" name="destination" type="text" [(ngModel)]="to" (ngModelChange)="showToSuggestions.set(true)" (focus)="showToSuggestions.set(true)" autocomplete="off" required />
+          </div>
+          @if (showToSuggestions()) {
+            <div class="city-suggestions" role="listbox">
+              @for (city of citySuggestions(to); track city) { <button type="button" role="option" (click)="selectCity('to', city)">{{ city }}</button> }
+            </div>
+          }
+        </div>
+
+        <div class="field">
+          <label class="field-label" for="journey-date">Date of journey</label>
+          <div class="input-wrap">
+            <svg class="field-icon" viewBox="0 0 24 24" aria-hidden="true">
+              <rect x="3.5" y="5" width="17" height="16" rx="2" />
+              <path d="M7.5 3v4m9-4v4M3.5 9.5h17" />
+            </svg>
+            <input id="journey-date" name="journey-date" type="date" [(ngModel)]="travelDate" required />
+          </div>
+        </div>
+
+        <button class="search-button" type="submit" [disabled]="loading()">
+          <svg class="button-icon" viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="10.8" cy="10.8" r="6.3" />
+            <path d="m15.5 15.5 4 4" />
+          </svg>
+          {{ loading() ? 'Searching…' : 'Search buses' }}
+        </button>
+      </div>
+
+      <div class="search-extras">
+        <div class="quick-select">
+          <span class="quick-label">Quick select:</span>
+          <button class="quick-chip" type="button" (click)="setTravelDate(0)">Today</button>
+          <button class="quick-chip" type="button" (click)="setTravelDate(1)">Tomorrow</button>
+        </div>
+
+        <label class="women-toggle">
+          <input class="toggle-input" type="checkbox" />
+          <span class="toggle-track" aria-hidden="true"><span class="toggle-thumb"></span></span>
+          <span class="toggle-label">Show buses with women-only seats</span>
+        </label>
+      </div>
+    </form>
+  </div>
+
+  <section class="page-container results-section" aria-labelledby="results-heading">
+    @if (hasSearched()) {
+      <div class="results-toolbar">
+        <h2 class="results-heading" id="results-heading">{{ results().length }} buses found</h2>
+        <div class="sort-controls" aria-label="Sort buses">
+          <span class="sort-label">Sort by:</span>
+          <button class="sort-chip" [class.is-active]="activeSort() === 'rating'" [attr.aria-pressed]="activeSort() === 'rating'" (click)="sortBy('rating')" type="button">Ratings</button>
+          <button class="sort-chip" [class.is-active]="activeSort() === 'departure'" [attr.aria-pressed]="activeSort() === 'departure'" (click)="sortBy('departure')" type="button">Departure time</button>
+          <button class="sort-chip" [class.is-active]="activeSort() === 'price'" [attr.aria-pressed]="activeSort() === 'price'" (click)="sortBy('price')" type="button">Price</button>
+        </div>
+      </div>
+    }
+
+    @if (loading()) {
+      <p class="api-message" role="status">Searching available buses…</p>
+    } @else if (errorMessage()) {
+      <p class="api-message api-error" role="alert">{{ errorMessage() }}</p>
+    } @else if (hasSearched() && results().length === 0) {
+      <p class="api-message">No buses found for this route</p>
+    } @else {
+      <div class="bus-list">
+        @for (bus of sortedResults(); track bus.busId) {
+          <article class="bus-card">
+            <div class="bus-operator">
+              <h3 class="operator-name">{{ bus.busName }}</h3>
+              <p class="bus-type">{{ bus.busType }} · {{ bus.busNumber }}</p>
+            </div>
+            <div class="bus-rating">
+              <span class="rating-badge">
+                <svg class="star-icon" viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="m10 1.8 2.5 5.1 5.7.8-4.1 4 .97 5.7L10 14.7l-5.1 2.7.97-5.7-4.1-4 5.7-.8L10 1.8Z" />
+                </svg>
+                {{ bus.rating }}
+              </span>
+              <span class="rating-count">out of 5</span>
+            </div>
+            <div class="journey-info">
+              <div class="journey-times">
+                <span>{{ formatTime(bus.departureTime) }}</span>
+                <span class="journey-arrow" aria-hidden="true">→</span>
+                <span>{{ formatTime(bus.arrivalTime) }}</span>
+              </div>
+              <p class="journey-meta">{{ bus.fromLocation }} to {{ bus.toLocation }} · {{ bus.availableSeats }} seats left</p>
+            </div>
+            <div class="bus-fare">
+              <div class="fare-copy">
+                <p class="fare-price">₹{{ bus.pricePerSeat | number: '1.0-0' }}</p>
+                <p class="fare-caption">Onwards</p>
+              </div>
+              <button
+                class="seats-button"
+                type="button"
+                [disabled]="bus.availableSeats === 0"
+                (click)="openBooking(bus.busId)"
+              >
+                View seats
+              </button>
+            </div>
+          </article>
+        }
+      </div>
+    }
+  </section>
+</main>

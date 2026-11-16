@@ -1,0 +1,384 @@
+.booking-page {
+  width: min(100% - 40px, 1180px);
+  min-height: calc(100vh - 76px);
+  margin: 0 auto;
+  padding: 32px 0 56px;
+  color: #242424;
+}
+
+.booking-page-header {
+  margin-bottom: 20px;
+}
+
+.booking-eyebrow {
+  margin: 0 0 5px;
+  color: #d84e55;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.booking-page-header h1 {
+  margin: 0;
+  font-size: 25px;
+  line-height: 1.25;
+}
+
+.booking-layout {
+  display: grid;
+  grid-template-columns: minmax(290px, 0.8fr) minmax(0, 1.35fr);
+  align-items: start;
+  gap: 20px;
+}
+
+.seat-panel,
+.passenger-panel,
+.journey-panel {
+  padding: 22px;
+  background: #fff;
+  border: 1px solid #e8e8eb;
+  border-radius: 10px;
+  box-shadow: 0 3px 12px rgb(34 34 34 / 4%);
+}
+
+.panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.panel-title {
+  margin: 0;
+  color: #252525;
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.panel-subtitle {
+  margin: 5px 0 0;
+  color: #7a7a7a;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.seat-capacity,
+.selected-count {
+  flex: 0 0 auto;
+  color: #777;
+  font-size: 11px;
+}
+
+.bus-front {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 22px 4px 12px;
+  padding-bottom: 10px;
+  color: #777;
+  border-bottom: 1px solid #ececef;
+  font-size: 12px;
+}
+
+.steering-icon {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: #555;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.6;
+}
+
+.seat-grid {
+  display: grid;
+  grid-template-columns: minmax(36px, 1fr) minmax(36px, 1fr) 22px minmax(36px, 1fr) minmax(36px, 1fr);
+  gap: 9px 8px;
+  max-width: 340px;
+  margin: 0 auto;
+}
+
+.seat-button {
+  min-width: 0;
+  height: 36px;
+  color: #338568;
+  background: #fff;
+  border: 1px solid #70ad98;
+  border-radius: 5px;
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.seat-button:hover:not(:disabled),
+.seat-button.selected {
+  color: #fff;
+  background: #d84e55;
+  border-color: #d84e55;
+}
+
+.seat-button.booked,
+.seat-button:disabled {
+  color: #fff;
+  background: #747980;
+  border-color: #747980;
+  cursor: not-allowed;
+}
+
+.seat-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 20px;
+  color: #6f6f6f;
+  font-size: 11px;
+}
+
+.seat-legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.legend-seat {
+  width: 13px;
+  height: 13px;
+  border: 1px solid #70ad98;
+  border-radius: 3px;
+}
+
+.legend-available {
+  background: #fff;
+}
+
+.legend-selected {
+  background: #d84e55;
+  border-color: #d84e55;
+}
+
+.legend-booked {
+  background: #747980;
+  border-color: #747980;
+}
+
+.booking-details {
+  display: grid;
+  gap: 18px;
+}
+
+.passenger-panel {
+  min-height: 178px;
+}
+
+.empty-passengers {
+  margin: 24px 0 0;
+  padding: 16px;
+  color: #777;
+  background: #fafafa;
+  border: 1px dashed #dedee2;
+  border-radius: 7px;
+  font-size: 13px;
+  text-align: center;
+}
+
+.passenger-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.passenger-card {
+  min-width: 0;
+  margin: 0;
+  padding: 12px;
+  border: 1px solid #e8e8eb;
+  border-radius: 7px;
+}
+
+.passenger-legend {
+  padding: 0 5px;
+  color: #454545;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.passenger-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(72px, 0.6fr) minmax(100px, 0.8fr);
+  gap: 10px;
+}
+
+.passenger-field {
+  display: grid;
+  gap: 5px;
+  color: #686868;
+  font-size: 11px;
+}
+
+.passenger-field input,
+.passenger-field select {
+  width: 100%;
+  min-width: 0;
+  height: 37px;
+  padding: 0 9px;
+  color: #333;
+  background: #fff;
+  border: 1px solid #d9d9dd;
+  border-radius: 5px;
+  font: inherit;
+  font-size: 12px;
+}
+
+.passenger-field input:focus,
+.passenger-field select:focus {
+  outline: 0;
+  border-color: #d84e55;
+  box-shadow: 0 0 0 3px rgb(216 78 85 / 12%);
+}
+
+.journey-bus-name {
+  margin: 16px 0 3px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.journey-bus-number {
+  margin: 0;
+  color: #777;
+  font-size: 11px;
+}
+
+.journey-facts {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px 20px;
+  margin-top: 20px;
+}
+
+.journey-fact {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.journey-fact span {
+  color: #858585;
+  font-size: 11px;
+}
+
+.journey-fact strong {
+  overflow-wrap: anywhere;
+  color: #363636;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.journey-total {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #ececef;
+  font-size: 13px;
+}
+
+.journey-total strong {
+  font-size: 17px;
+}
+
+.book-now-button {
+  min-height: 42px;
+  margin-top: 16px;
+  padding: 0 18px;
+  color: #fff;
+  background: #21865a;
+  border: 1px solid #21865a;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.16s ease, box-shadow 0.16s ease;
+}
+
+.book-now-button:hover:not(:disabled) {
+  background: #176f49;
+  box-shadow: 0 3px 8px rgb(23 111 73 / 20%);
+}
+
+.book-now-button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.booking-message {
+  margin: 0 0 16px;
+  padding: 12px 14px;
+  color: #555;
+  background: #fff;
+  border: 1px solid #e8e8eb;
+  border-radius: 7px;
+  font-size: 13px;
+}
+
+.booking-error {
+  color: #a32632;
+  background: #fff0f1;
+  border-color: #f5d2d5;
+}
+
+.booking-success {
+  color: #17653c;
+  background: #edf9f1;
+  border-color: #c9ebd5;
+}
+
+.seat-button:focus-visible,
+.book-now-button:focus-visible {
+  outline: 3px solid rgb(216 78 85 / 28%);
+  outline-offset: 2px;
+}
+
+@media (max-width: 767px) {
+  .booking-page {
+    width: min(100% - 28px, 560px);
+    padding-top: 24px;
+  }
+
+  .booking-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+
+  .seat-panel,
+  .passenger-panel,
+  .journey-panel {
+    padding: 17px;
+  }
+
+  .seat-grid {
+    max-width: 360px;
+  }
+}
+
+@media (max-width: 420px) {
+  .passenger-fields {
+    grid-template-columns: minmax(0, 1fr) 78px;
+  }
+
+  .passenger-gender-field {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .seat-button,
+  .book-now-button {
+    transition: none;
+  }
+}

@@ -42,3 +42,37 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Angular
+node_modules/
+dist/
+.angular/
+.npm/
+
+# .NET Core
+bin/
+obj/
+.objBuildCheck/
+.vs/
+*.user
+*.suo
+*.dll
+*.pdb
+
+# SQL Server
+*.mdf
+*.ldf
+*.db
+*.db-shm
+*.db-wal
+*.bak
+*.bak-shm
+*.bak-wal
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Sensitive configuration
+appsettings.Development.json
